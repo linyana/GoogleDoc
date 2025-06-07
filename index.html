@@ -10,6 +10,13 @@
       box-sizing: border-box;
     }
 
+    .name-column {
+      max-width: 150px;
+      white-space: normal;
+      word-break: break-word;
+      text-align: left;
+    }
+
     body {
       font-family: "Segoe UI", sans-serif;
       background-color: #f7f9fb;
@@ -104,8 +111,9 @@
 
         let html = '<table><tr>';
         html += '<th>#</th>';
-        titleRow.forEach(title => {
-          html += `<th>${title}</th>`;
+        titleRow.forEach((title, index) => {
+          const isNameColumn = title.toLowerCase() === 'name';
+          html += `<th${isNameColumn ? ' class="name-column"' : ''}>${title}</th>`;
         });
         html += '</tr>';
 
@@ -115,17 +123,18 @@
           html += `<td>${i}</td>`;
           row.c.forEach((cell, colIndex) => {
             const value = cell?.v ?? '';
+            const isNameColumn = titleRow[colIndex].toLowerCase() === 'name';
+
             if (isImageColumn[colIndex]) {
               html += value
                 ? `<td><img src="${value}" alt="image" /></td>`
                 : '<td></td>';
             } else if (isFromColumn[colIndex]) {
               html += value
-                ? `<td><a href="${value}" target=”_blank“>Source</a></td>`
+                ? `<td><a href="${value}" target="_blank">Source</a></td>`
                 : '<td></td>';
-            } 
-            else {
-              html += `<td>${value}</td>`;
+            } else {
+              html += `<td${isNameColumn ? ' class="name-column"' : ''}>${value}</td>`;
             }
           });
           html += '</tr>';
