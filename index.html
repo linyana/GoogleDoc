@@ -76,6 +76,7 @@
       max-height: 100px;
       border-radius: 6px;
       box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
     }
 
     #pagination {
@@ -104,11 +105,37 @@
       background: #ccc;
       cursor: not-allowed;
     }
+
+    /* 模态框样式 */
+    #image-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    #image-modal img {
+      max-width: 90vw;
+      max-height: 90vh;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    }
   </style>
 </head>
 <body>
   <div id="table-container"><div id="output">Loading...</div></div>
   <div id="pagination"></div>
+
+  <!-- 模态框 -->
+  <div id="image-modal" onclick="hideImageModal()">
+    <img id="modal-img" src="" alt="Preview" />
+  </div>
 
   <script>
     const sheetID = '1wyxggYVyxiv25G2aB8XW3yTUt5UvfU2HKeReny_1mUE';
@@ -145,7 +172,7 @@
 
           if (isImageColumn[colIndex]) {
             html += value
-              ? `<td><img src="${value}" alt="image" /></td>`
+              ? `<td><img src="${value}" alt="image" onclick="showImageModal('${value.replace(/'/g, "\\'")}')" /></td>`
               : '<td></td>';
           } else if (isFromColumn[colIndex]) {
             html += value
@@ -177,6 +204,19 @@
       localStorage.setItem('currentPage', page);
       renderTable(page);
       renderPagination(Math.ceil(rows.length / pageSize), page);
+    }
+
+    function showImageModal(src) {
+      const modal = document.getElementById('image-modal');
+      const modalImg = document.getElementById('modal-img');
+      modalImg.src = src;
+      modal.style.display = 'flex';
+    }
+
+    function hideImageModal() {
+      const modal = document.getElementById('image-modal');
+      modal.style.display = 'none';
+      document.getElementById('modal-img').src = '';
     }
 
     fetch(url)
